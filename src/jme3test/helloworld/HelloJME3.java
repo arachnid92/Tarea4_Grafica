@@ -35,7 +35,10 @@ public class HelloJME3 extends SimpleApplication{
   private Cola salida;
   private Servidor Server;    
     
-    
+  
+  private Nave nave;
+  
+  
   private BulletAppState bulletAppState;
   private Geometry teaGeom;
   private Geometry teaGeom2;
@@ -68,32 +71,13 @@ public class HelloJME3 extends SimpleApplication{
     bulletAppState = new BulletAppState();
     stateManager.attach(bulletAppState);
     bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-
-    // load a teapot model 
-    teaGeom = (Geometry) assetManager.loadModel("Models/Teapot/Teapot.obj");
-    Material mat = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-    teaGeom.setMaterial(mat);
-    teaGeom.getLocalRotation().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y); 
-    teaGeom.setLocalTranslation(2.0f, 0, 0.0f);
-    teaNode = new Node("teaNode");
-    teaNode.attachChild(teaGeom);
-    rootNode.attachChild(teaNode);
-    teteraShape = CollisionShapeFactory.createDynamicMeshShape(teaGeom);
-    teaGeom_phy = new RigidBodyControl(teteraShape, 0);
-    teaGeom.addControl(teaGeom_phy);
-    bulletAppState.getPhysicsSpace().add(teaGeom_phy);
     
+    Geometry geom = (Geometry) assetManager.loadModel("Models/Teapot/Teapot.obj");
+    Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
     
-    teaGeom2 = (Geometry) assetManager.loadModel("Models/Teapot/Teapot.obj");
-    teaGeom2.setMaterial(mat);
-    teaGeom2.getLocalRotation().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y); 
-    teaNode2 = new Node("teaNode2");
-    teaNode2.attachChild(teaGeom2);
-    rootNode.attachChild(teaNode2);
-    teaGeom2_phy = new RigidBodyControl(teteraShape, 0);
-    teaGeom2.addControl(teaGeom2_phy);
-    bulletAppState.getPhysicsSpace().add(teaGeom2_phy);
-    
+    nave = new Nave(geom, material);
+    nave.Translate(2.0f, 0, 0.0f);
+    rootNode.attachChild(nave.getNode());
     
     cam.setLocation(new Vector3f(0f, 10f, -10f));
     cam.lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
@@ -157,7 +141,7 @@ public class HelloJME3 extends SimpleApplication{
 		else{
                     double Y = getY(mensaje);
                     double X = getX(mensaje);
-                    teaGeom.setLocalTranslation((float) (-Y), 0f, (float) (-X));
+                    nave.Translate((float) (-Y), 0f, (float) (-X));
                     
                 }
             }
