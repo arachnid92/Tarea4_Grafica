@@ -15,7 +15,7 @@ import com.jme3.material.Material;
 public class Nave {
     private Geometry nave;
     private Node node;
-    private RigidBodyControl teaGeom_phy;
+    //private RigidBodyControl teaGeom_phy;
     
     public Nave(Geometry nave, Material mat){
         this.nave = nave;

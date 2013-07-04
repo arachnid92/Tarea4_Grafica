@@ -34,10 +34,8 @@ public class HelloJME3 extends SimpleApplication{
   private Cola entrada;
   private Cola salida;
   private Servidor Server;    
-    
   
-  private Nave nave;
-  
+  private Nave nave;  
   
   private BulletAppState bulletAppState;
   private Geometry teaGeom;
@@ -94,7 +92,6 @@ public class HelloJME3 extends SimpleApplication{
     Server = new Servidor(entrada, salida);
     Thread t = new Thread(Server);
     t.start();
-
     
   }
 
@@ -137,6 +134,9 @@ public class HelloJME3 extends SimpleApplication{
 			System.out.println("Jugador 1 desconectado");
 			Server.descontarJugador();
                     }
+                    else if(split[2].equals("2")){
+			System.out.println("bum");
+                    }
                 }
 		else{
                     double Y = getY(mensaje);
@@ -169,11 +169,11 @@ public class HelloJME3 extends SimpleApplication{
     }
     public double getY(String mensaje){
 	String[] split = mensaje.split("/");
-	return Double.parseDouble(split[2].substring(2));		
+	return Double.parseDouble(split[2]);		
     }
     public double getX(String mensaje){
 	String[] split = mensaje.split("/");
-	return Double.parseDouble(split[1].substring(2));		
+	return Double.parseDouble(split[1]);		
     }
 
  
