@@ -33,7 +33,8 @@ public class HelloJME3 extends SimpleApplication{
   private String mensaje;
   private Cola entrada;
   private Cola salida;
-  private Servidor Server;    
+  private Servidor Server;   
+  private float hor =0, ver=0;
   
   private Nave nave;  
   
@@ -121,7 +122,10 @@ public class HelloJME3 extends SimpleApplication{
 
 	direction.set(cam.getDirection()).normalizeLocal();
 	   
-
+        nave.Translate(hor, 0f, ver);
+       
+        
+        
         // make the player rotate
         while ((mensaje=entrada.dequeue())!=null){
             if(Jugador(1,mensaje)){
@@ -141,7 +145,14 @@ public class HelloJME3 extends SimpleApplication{
 		else{
                     double Y = getY(mensaje);
                     double X = getX(mensaje);
-                    nave.Translate((float) (-Y), 0f, (float) (-X));
+                    //nave.Translate((float) (-Y), 0f, (float) (-X));
+                    if (X>1 && X>Y){
+                        ver-=0.5;
+                    }
+                    else if(X<-1 && X<Y){
+                        ver+=0.5;
+                    }
+                    
                     
                 }
             }
