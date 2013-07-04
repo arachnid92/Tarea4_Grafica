@@ -26,7 +26,7 @@ public class Bala {
     private RigidBodyControl  ball_phy;
     private BulletAppState bulletAppState;
     
-    public Bala(Vector3f pos, Material mat, Node root, int Jugador){     
+    public Bala(BulletAppState B,Vector3f pos, Material mat, Node root, int Jugador){     
         this.Jugador = Jugador;
         radio=0.1f;
         this.sphere = new Sphere(30,30,radio);
@@ -34,6 +34,8 @@ public class Bala {
         bala.setMaterial(mat);
         root.attachChild(bala);
         bala.setLocalTranslation(pos);
+        
+        bulletAppState=B;
         
         ball_phy = new RigidBodyControl(1f);
     

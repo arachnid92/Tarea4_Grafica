@@ -78,6 +78,8 @@ public class HelloJME3 extends SimpleApplication{
     Thread t = new Thread(Server);
     t.start();
     
+    matBala= new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+    
   }
   
    public void initMaterials() {
@@ -103,19 +105,6 @@ public class HelloJME3 extends SimpleApplication{
 
   }
    
-   public void makeBullet(Vector3f n) {
-    Sphere sphere=new Sphere(30,30,0.1f);
-    Geometry ball_geo = new Geometry("cannon ball", sphere);
-    Material mat = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-    ball_geo.setMaterial(mat);
-    rootNode.attachChild(ball_geo);
-    ball_geo.setLocalTranslation(n);
-    ball_phy = new RigidBodyControl(1f);
-    
-    ball_geo.addControl(ball_phy);
-    bulletAppState.getPhysicsSpace().add(ball_phy);
-    ball_phy.setLinearVelocity(Vector3f.UNIT_Z.mult(10));
-  }
 
    @Override
     public void simpleUpdate(float tpf) {
@@ -143,7 +132,8 @@ public class HelloJME3 extends SimpleApplication{
                     else if(split[2].equals("2")){
 			//System.out.println("bum");
                         //makeBullet(nave.getPos());
-                        Bala bala = new Bala(nave.getPos(), floor_mat, rootNode, 1);
+                        Bala bala = new Bala(bulletAppState, nave.getPos(), matBala, rootNode, 1);
+                        bala.setVelocity(10);
                     }
                 }
 		else{
