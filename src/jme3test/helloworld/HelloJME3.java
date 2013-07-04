@@ -1,25 +1,16 @@
 package jme3test.helloworld;
- 
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.input.controls.KeyTrigger;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.input.controls.*;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Quad;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -35,21 +26,14 @@ public class HelloJME3 extends SimpleApplication{
   private Cola salida;
   private Servidor Server;   
   private float hor =0, ver=0;
-  
-  private Nave nave;  
-  
+  private RigidBodyControl  ball_phy;  
+  private Nave nave;    
+  private Geometry floor_geo;  
   private BulletAppState bulletAppState;
-  private Geometry teaGeom;
-  private Geometry teaGeom2;
-  private Node teaNode;
-  private Node teaNode2;
-  private RigidBodyControl    teaGeom_phy;
-  private RigidBodyControl    teaGeom2_phy;
-  CollisionShape teteraShape;
   private RigidBodyControl    floor_phy;
-  private static final Box    floor;
-   Material floor_mat;
-  Vector3f direction = new Vector3f();
+  private static Box floor;
+  private Material floor_mat;
+  private Material matBala;
 
   public static void main(String[] args) {
     HelloJME3 app = new HelloJME3();
@@ -95,7 +79,6 @@ public class HelloJME3 extends SimpleApplication{
     t.start();
     
   }
-
   
    public void initMaterials() {
  
@@ -107,20 +90,39 @@ public class HelloJME3 extends SimpleApplication{
     floor_mat.setTexture("ColorMap", tex3);
   }
    public void initFloor() {
-    Geometry floor_geo = new Geometry("Floor", floor);
+    floor = new Box(Vector3f.ZERO, 10f, 0.1f, 150f);
+   // floor.scaleTextureCoordinates(new Vector2f(3, 6));
+    floor_geo = new Geometry("Floor", floor);
     floor_geo.setMaterial(floor_mat);
-    floor_geo.setLocalTranslation(0f, 0f, 0f);
-    //floor_geo.getLocalRotation().fromAngleAxis(-FastMath.HALF_PI/2, Vector3f.UNIT_X); 
+    floor_geo.setLocalTranslation(0, -0.1f, 0);
     this.rootNode.attachChild(floor_geo);
     /* Make the floor physical with mass 0.0f! */
     floor_phy = new RigidBodyControl(0.0f);
     floor_geo.addControl(floor_phy);
     bulletAppState.getPhysicsSpace().add(floor_phy);
+
   }
+   
+   public void makeBullet(Vector3f n) {
+    Sphere sphere=new Sphere(30,30,0.1f);
+    Geometry ball_geo = new Geometry("cannon ball", sphere);
+    Material mat = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+    ball_geo.setMaterial(mat);
+    rootNode.attachChild(ball_geo);
+    ball_geo.setLocalTranslation(n);
+    ball_phy = new RigidBodyControl(1f);
+    
+    ball_geo.addControl(ball_phy);
+    bulletAppState.getPhysicsSpace().add(ball_phy);
+    ball_phy.setLinearVelocity(Vector3f.UNIT_Z.mult(10));
+  }
+
    @Override
     public void simpleUpdate(float tpf) {
+       
+        floor_geo.move(Vector3f.UNIT_Z.mult(-0.02f));
 
-	direction.set(cam.getDirection()).normalizeLocal();
+	//direction.set(cam.getDirection()).normalizeLocal();
 	   
         nave.Translate(hor, 0f, ver);
        
@@ -139,20 +141,27 @@ public class HelloJME3 extends SimpleApplication{
 			Server.descontarJugador();
                     }
                     else if(split[2].equals("2")){
-			System.out.println("bum");
+			//System.out.println("bum");
+                        //makeBullet(nave.getPos());
+                        Bala bala = new Bala(nave.getPos(), floor_mat, rootNode, 1);
                     }
                 }
 		else{
                     double Y = getY(mensaje);
                     double X = getX(mensaje);
                     //nave.Translate((float) (-Y), 0f, (float) (-X));
-                    if (X>1 && X>Y){
-                        ver-=0.5;
+                    if (X>2 && X>Y){
+                        ver-=0.3;
                     }
-                    else if(X<-1 && X<Y){
-                        ver+=0.5;
+                    else if(X<-2 && X<Y){
+                        ver+=0.3;
                     }
-                    
+                    else if(Y<-2 && X>Y){
+                        hor+=0.3;
+                    }
+                    else if(Y>2 && X<Y){
+                        hor-=0.3;
+                    }                    
                     
                 }
             }
@@ -186,6 +195,6 @@ public class HelloJME3 extends SimpleApplication{
 	String[] split = mensaje.split("/");
 	return Double.parseDouble(split[1]);		
     }
-
- 
+    
+   
 }

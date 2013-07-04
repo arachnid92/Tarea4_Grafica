@@ -8,6 +8,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
 /**
  *
  * @author Agustin Antoine
@@ -20,7 +21,7 @@ public class Nave {
     public Nave(Geometry nave, Material mat){
         this.nave = nave;
         nave.setMaterial(mat);
-        node = new Node("teaNode");
+        node = new Node("Nave");
         node.attachChild(this.nave);
     }
     
@@ -30,6 +31,9 @@ public class Nave {
     
     public Node getNode(){
         return this.node;
+    }
+    public Vector3f getPos(){
+        return this.nave.getLocalTranslation(); 
     }
     
 }
